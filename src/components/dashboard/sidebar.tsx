@@ -157,48 +157,6 @@ export function DashboardSidebar({
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
-
-        <SidebarSeparator />
-
-        <SidebarGroup>
-          <Collapsible open={favoritesOpen} onOpenChange={setFavoritesOpen}>
-            <CollapsibleTrigger asChild>
-              <SidebarGroupLabel className="h-4 pb-4 pt-2 text-xs text-muted-foreground hover:text-foreground hover:bg-transparent cursor-pointer">
-                <span>Favorites</span>
-                <ChevronDown
-                  className={cn(
-                    "size-3 transition-transform ml-auto",
-                    favoritesOpen && "rotate-180"
-                  )}
-                />
-              </SidebarGroupLabel>
-            </CollapsibleTrigger>
-            <CollapsibleContent>
-              <SidebarGroupContent>
-                <SidebarMenu>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton className="h-7 text-sm text-muted-foreground">
-                      <Folder className="size-4" />
-                      <span>Contracts</span>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton className="h-7 text-sm text-muted-foreground">
-                      <Folder className="size-4" />
-                      <span>Content</span>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton className="h-7 text-sm text-muted-foreground">
-                      <Folder className="size-4" />
-                      <span>Summaries</span>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </CollapsibleContent>
-          </Collapsible>
-        </SidebarGroup>
       </SidebarContent>
 
       <SidebarFooter className="mb-4">
