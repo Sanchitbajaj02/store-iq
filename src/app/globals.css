@@ -116,7 +116,69 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
+    font-family: var(--font-poppins), sans-serif;
+
+  }
+}
+
+
+@layer utilities {
+  /* Typography utilities following design guide */
+
+  /* Desktop (xl/1200px+) */
+  @media (min-width: 1200px) {
+    .text-normal {
+      font-size: 1rem;
+      /* 16px */
+    }
+
+    .text-subheading {
+      font-size: 1.5rem;
+      /* 24px */
+    }
+
+    .text-heading {
+      font-size: 2.25rem;
+      /* 36px */
+    }
+  }
+
+  /* Mobile (sm/768px-) */
+  @media (max-width: 767px) {
+    .text-normal {
+      font-size: 0.8rem;
+      /* 12px */
+    }
+
+    .text-subheading {
+      font-size: 1.25rem;
+      /* 20px */
+    }
+
+    .text-heading {
+      font-size: 2rem;
+      /* 32px */
+    }
+  }
+
+  /* Tablet/Medium screens (768px - 1199px) - use desktop sizes */
+  @media (min-width: 768px) and (max-width: 1199px) {
+    .text-normal {
+      font-size: 1rem;
+      /* 16px */
+    }
+
+    .text-subheading {
+      font-size: 1.5rem;
+      /* 24px */
+    }
+
+    .text-heading {
+      font-size: 2.25rem;
+      /* 36px */
+    }
   }
 }

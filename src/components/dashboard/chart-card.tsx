@@ -40,8 +40,7 @@ export function ChartCard() {
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState<Date | undefined>(undefined);
 
-  // Utiliser resolvedTheme pour gérer le thème système
-  // resolvedTheme sera undefined jusqu'au montage, donc on utilise light par défaut
+  // Only use theme after component is mounted to prevent hydration mismatch
   const isDark = resolvedTheme === "dark";
   const newLeadsColor = isDark ? NEW_LEADS_COLOR_DARK : NEW_LEADS_COLOR_LIGHT;
   const labelColor = isDark ? LABEL_COLOR_DARK : LABEL_COLOR_LIGHT;
