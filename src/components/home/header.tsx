@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { User2Icon, Menu, XIcon } from "lucide-react";
+import { Menu, XIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
@@ -13,6 +13,9 @@ import {
   SidebarMenuItem,
   SidebarHeader,
 } from "@/components/ui/sidebar";
+import { ThemeToggle } from "../theme-toggle";
+import { getSupabaseBrowserClient } from "@/lib/supabase/browser-client";
+import type { User } from "@supabase/supabase-js";
 
 const navItems = [
   {
@@ -35,14 +38,20 @@ const navItems = [
   },
 ];
 
-const SidebarComponent = ({ toggleSidebar }: { toggleSidebar: () => void }) => {
+const SidebarComponent = ({
+  toggleSidebar,
+  user,
+}: {
+  toggleSidebar: () => void;
+  user: User | null;
+}) => {
   return (
-    <Sidebar className="bg-white py-4 px-4">
+    <Sidebar className="py-4 px-4">
       <SidebarHeader className="mb-4 ml-auto">
         <Button
           variant="default"
           size="icon"
-          className="cursor-pointer bg-neutral-800"
+          className="cursor-pointer bg-neutral-800 dark:hover:bg-neutral-900"
           onClick={() => toggleSidebar()}
         >
           <XIcon size={24} color="white" />
@@ -54,30 +63,24 @@ const SidebarComponent = ({ toggleSidebar }: { toggleSidebar: () => void }) => {
             <SidebarMenuItem key={i}>
               <Link
                 href={"/"}
-                className="text-white/80 hover:text-white text-sm transition-colors"
+                className="text-neutral-800 dark:text-white/80 hover:text-neutral-900 dark:hover:text-white text-sm transition-colors"
               >
                 {cert.title}
               </Link>
             </SidebarMenuItem>
           ))}
           <SidebarMenuItem className="mb-4">
-            <Link
-              href="/signin"
-              className="text-white/80 hover:text-white text-base flex flex-row items-center gap-2"
+            <Button
+              asChild
+              variant={"outline"}
+              className={cn(
+                "rounded-full bg-accent hover:bg-accent hover:text-accent-foreground"
+              )}
             >
-              <User2Icon size={20} /> Signin
-            </Link>
-          </SidebarMenuItem>
-
-          <SidebarMenuItem className="mb-4">
-            <Link href="/submit-listing">
-              <Button
-                size="lg"
-                className="bg-white text-black font-medium text-base rounded-full hover:cursor-pointer"
-              >
-                Submit Listing
-              </Button>
-            </Link>
+              <Link href={user ? "/dashboard" : "/login"} className="text-base">
+                {user ? "Dashboard" : "Signin"}
+              </Link>
+            </Button>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarContent>
@@ -87,32 +90,38 @@ const SidebarComponent = ({ toggleSidebar }: { toggleSidebar: () => void }) => {
 
 const Header = () => {
   const { toggleSidebar } = useSidebar();
-  const [isScrolled, setIsScrolled] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
-    const handleScroll = () => {
-      const scrollPosition = window.pageYOffset;
-      setIsScrolled(scrollPosition > 200);
-    };
+    const supabase = getSupabaseBrowserClient();
 
-    // Use passive event listener for better scroll performance
-    window.addEventListener("scroll", handleScroll, { passive: true });
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      setUser(user);
+    });
 
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
   return (
     <header className="py-4 fixed w-full top-0 z-50">
-      <SidebarComponent toggleSidebar={toggleSidebar} />
+      <SidebarComponent toggleSidebar={toggleSidebar} user={user} />
       <div className="max-w-6xl mx-auto blur-in-lg">
         <div
-          className={cn("flex flex-row items-center justify-between rounded-full py-2 px-4 lg:px-2 transition-colors mx-2 lg:mx-0 backdrop-blur-lg shadow")}
+          className={cn(
+            "flex flex-row items-center justify-between rounded-full py-2 px-4 lg:px-2 transition-colors mx-2 lg:mx-0 backdrop-blur-lg shadow"
+          )}
         >
           {/* Logo */}
           <Link href="/" className="mx-2 relative">
-            <p className="font-bold text-neutral-900 dark:text-white text-2xl">Store IQ</p>
+            <p className="font-bold text-neutral-900 dark:text-white text-2xl">
+              Store IQ
+            </p>
           </Link>
 
           {/* Navigation */}
@@ -131,18 +140,28 @@ const Header = () => {
                 );
               })}
 
-            <Button asChild variant={"outline"} className={cn("rounded-full bg-accent hover:bg-accent hover:text-accent-foreground")}>
-              <Link href="/login" className="text-base">
-                Signin
+            <Button
+              asChild
+              variant={"outline"}
+              className={cn(
+                "rounded-full bg-accent hover:bg-accent hover:text-accent-foreground mx-2"
+              )}
+            >
+              <Link href={user ? "/dashboard" : "/login"} className="text-base">
+                {user ? "Dashboard" : "Signin"}
               </Link>
             </Button>
+
+            <ThemeToggle />
           </nav>
 
-          <div className="block lg:hidden mx-2">
+          <div className="block lg:hidden mx-2 space-x-4">
+            <ThemeToggle />
+
             <Button
               variant="default"
               size="icon"
-              className="cursor-pointer bg-neutral-800"
+              className="cursor-pointer bg-neutral-800 dark:hover:bg-neutral-900"
               onClick={() => toggleSidebar()}
             >
               <Menu size={24} color="white" />

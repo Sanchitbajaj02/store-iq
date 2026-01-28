@@ -26,7 +26,8 @@ import { Input } from "@/components/ui/input";
 import { Kbd } from "@/components/ui/kbd";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { getSupabaseBrowserClient } from "@/lib/supabase/browser-client";
 
 const navItems = [
   { label: "Overview", href: "/dashboard", icon: LayoutDashboard },
@@ -39,10 +40,17 @@ export function DashboardSidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname();
+  const router = useRouter();
 
   function isActive(href: string) {
     if (href === "/dashboard") return pathname === "/dashboard";
     return pathname.startsWith(href);
+  }
+
+  async function handleLogout() {
+    const supabase = getSupabaseBrowserClient();
+    await supabase.auth.signOut();
+    router.push("/");
   }
 
   return (
@@ -129,7 +137,10 @@ export function DashboardSidebar({
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
-            <SidebarMenuButton className="h-7 text-sm text-muted-foreground">
+            <SidebarMenuButton
+              className="h-7 text-sm text-muted-foreground"
+              onClick={handleLogout}
+            >
               <LogOutIcon className="size-4" />
               <span>Logout</span>
             </SidebarMenuButton>
