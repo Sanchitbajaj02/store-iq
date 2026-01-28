@@ -1,6 +1,6 @@
 import { db } from "./index";
 import { locations, reviews, kpis } from "./schema";
-import { eq, sql, desc, asc, and, lte } from "drizzle-orm";
+import { eq, sql, desc, asc, and, lte, count } from "drizzle-orm";
 
 // --- Overview Stats ---
 export async function getOverviewStats() {
@@ -47,10 +47,13 @@ export async function getOverviewStats() {
     const current = lastTwoWeeks[0];
     const previous = lastTwoWeeks[1];
     if (previous.impressions > 0) {
-      impressionsTrend = ((current.impressions - previous.impressions) / previous.impressions) * 100;
+      impressionsTrend =
+        ((current.impressions - previous.impressions) / previous.impressions) *
+        100;
     }
     if (previous.actions > 0) {
-      actionsTrend = ((current.actions - previous.actions) / previous.actions) * 100;
+      actionsTrend =
+        ((current.actions - previous.actions) / previous.actions) * 100;
     }
   }
 
@@ -59,10 +62,19 @@ export async function getOverviewStats() {
   const rv = reviewStats[0];
 
   return {
-    totalImpressions: Number(k.totalImpressionsMaps) + Number(k.totalImpressionsSearch),
-    totalActions: Number(k.totalPhoneCalls) + Number(k.totalDirectionRequests) + Number(k.totalWebsiteClicks),
+    totalImpressions:
+      Number(k.totalImpressionsMaps) + Number(k.totalImpressionsSearch),
+    totalActions:
+      Number(k.totalPhoneCalls) +
+      Number(k.totalDirectionRequests) +
+      Number(k.totalWebsiteClicks),
     avgRating: Number(Number(r.avgRating).toFixed(1)),
-    replyRate: rv.totalReviews > 0 ? Math.round((Number(rv.repliedReviews) / Number(rv.totalReviews)) * 100) : 0,
+    replyRate:
+      rv.totalReviews > 0
+        ? Math.round(
+            (Number(rv.repliedReviews) / Number(rv.totalReviews)) * 100
+          )
+        : 0,
     totalLocations: Number(r.totalLocations),
     totalBookings: Number(k.totalBookings),
     impressionsTrend: Math.round(impressionsTrend * 10) / 10,
@@ -118,7 +130,10 @@ export async function getLocationsList() {
       ...loc,
       avgWeeklyImpressions: kpi ? Math.round(Number(kpi.avgImpressions)) : 0,
       avgWeeklyActions: kpi ? Math.round(Number(kpi.avgActions)) : 0,
-      replyRate: reply && Number(reply.total) > 0 ? Math.round((Number(reply.replied) / Number(reply.total)) * 100) : 0,
+      replyRate:
+        reply && Number(reply.total) > 0
+          ? Math.round((Number(reply.replied) / Number(reply.total)) * 100)
+          : 0,
     };
   });
 }
@@ -135,8 +150,12 @@ export async function getTopAndBottomLocations() {
     })
     .from(locations);
 
-  const byRating = [...allLocs].sort((a, b) => b.averageRating - a.averageRating);
-  const byReviews = [...allLocs].sort((a, b) => b.totalReviews - a.totalReviews);
+  const byRating = [...allLocs].sort(
+    (a, b) => b.averageRating - a.averageRating
+  );
+  const byReviews = [...allLocs].sort(
+    (a, b) => b.totalReviews - a.totalReviews
+  );
 
   return {
     topByRating: byRating.slice(0, 10),
@@ -163,13 +182,17 @@ export async function getKpiTrends() {
 
   return trends.map((t) => ({
     weekStart: t.weekStart,
-    impressions: Number(t.totalImpressionsMaps) + Number(t.totalImpressionsSearch),
+    impressions:
+      Number(t.totalImpressionsMaps) + Number(t.totalImpressionsSearch),
     mapImpressions: Number(t.totalImpressionsMaps),
     searchImpressions: Number(t.totalImpressionsSearch),
     phoneCalls: Number(t.totalPhoneCalls),
     directionRequests: Number(t.totalDirectionRequests),
     websiteClicks: Number(t.totalWebsiteClicks),
-    actions: Number(t.totalPhoneCalls) + Number(t.totalDirectionRequests) + Number(t.totalWebsiteClicks),
+    actions:
+      Number(t.totalPhoneCalls) +
+      Number(t.totalDirectionRequests) +
+      Number(t.totalWebsiteClicks),
     bookings: Number(t.totalBookings),
   }));
 }
@@ -304,9 +327,13 @@ export async function getReviewInsights() {
     replyRate: {
       total: Number(replyStats[0].total),
       replied: Number(replyStats[0].replied),
-      rate: replyStats[0].total > 0
-        ? Math.round((Number(replyStats[0].replied) / Number(replyStats[0].total)) * 100)
-        : 0,
+      rate:
+        replyStats[0].total > 0
+          ? Math.round(
+              (Number(replyStats[0].replied) / Number(replyStats[0].total)) *
+                100
+            )
+          : 0,
     },
     languageBreakdown: langBreakdown.map((l) => ({
       language: l.language,
@@ -420,14 +447,29 @@ export async function getAlerts() {
   const byLoc = new Map<string, { weekStart: string; impressions: number }[]>();
   for (const row of weeklyByLocation) {
     const arr = byLoc.get(row.locationId) || [];
-    arr.push({ weekStart: row.weekStart, impressions: Number(row.impressions) });
+    arr.push({
+      weekStart: row.weekStart,
+      impressions: Number(row.impressions),
+    });
     byLoc.set(row.locationId, arr);
   }
 
-  const declining: { locationId: string; name: string; city: string; decline: number }[] = [];
+  const declining: {
+    locationId: string;
+    name: string;
+    city: string;
+    decline: number;
+  }[] = [];
   const locMap = new Map(
-    (await db.select({ locationId: locations.locationId, name: locations.name, city: locations.city }).from(locations))
-      .map((l) => [l.locationId, l])
+    (
+      await db
+        .select({
+          locationId: locations.locationId,
+          name: locations.name,
+          city: locations.city,
+        })
+        .from(locations)
+    ).map((l) => [l.locationId, l])
   );
 
   for (const [locId, weeks] of byLoc) {
@@ -457,5 +499,18 @@ export async function getAlerts() {
     lowRatedStores: lowRated,
     unrepliedNegativeReviews: unrepliedNegative,
     decliningEngagement: declining.slice(0, 10),
+  };
+}
+
+// --- Get total count of locations ---
+export async function getTotalLocations() {
+  const result = await db
+    .select({
+      count: count(locations.locationId),
+    })
+    .from(locations);
+
+  return {
+    locationCount: result[0].count,
   };
 }
