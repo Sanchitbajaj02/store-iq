@@ -1,7 +1,5 @@
 "use client";
 
-import { Download, Plus } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { ThemeToggle } from "@/components/theme-toggle";
 
@@ -11,21 +9,14 @@ export function DashboardHeader() {
       <div className="flex items-center gap-2 min-w-0 flex-1">
         <SidebarTrigger className="shrink-0" />
         <h1 className="text-base sm:text-xl md:text-2xl font-medium text-foreground truncate">
-          Welcome back, LN 👋
+          Store IQ - Location Intelligence
         </h1>
       </div>
 
       <div className="flex items-center gap-1.5 sm:gap-2 md:gap-3 shrink-0">
-        <div className="hidden lg:flex items-center gap-3">
-          <Button variant="outline" size="sm" className="gap-2">
-            <Download className="size-4" />
-            <span className="hidden xl:inline">Export</span>
-          </Button>
-          <Button size="sm" className="gap-2">
-            <Plus className="size-4" />
-            <span className="hidden xl:inline">New Project</span>
-          </Button>
-        </div>
+        <span className="hidden md:inline text-sm text-muted-foreground">
+          50 Healthcare Stores
+        </span>
         <ThemeToggle />
       </div>
     </div>

@@ -112,7 +112,7 @@ const Header = () => {
         >
           {/* Logo */}
           <Link href="/" className="mx-2 relative">
-            <p className="font-bold text-white text-2xl">Store IQ</p>
+            <p className="font-bold text-neutral-900 dark:text-white text-2xl">Store IQ</p>
           </Link>
 
           {/* Navigation */}
@@ -124,7 +124,7 @@ const Header = () => {
                   <Link
                     key={navItem.id}
                     href={navItem.link}
-                    className="text-white/80 hover:text-white text-base flex flex-row items-center gap-2"
+                    className="text-neutral-800 dark:text-white/80 hover:text-neutral-900 dark:hover:text-white text-base flex flex-row items-center gap-2"
                   >
                     {navItem.title} {navItem.icon}
                   </Link>

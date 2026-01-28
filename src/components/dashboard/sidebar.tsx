@@ -1,22 +1,13 @@
 "use client";
 
-import { useState } from "react";
 import {
   Search,
-  Bell,
-  Sparkles,
   LayoutDashboard,
-  Calendar,
-  Library,
-  Users,
-  Link as LinkIcon,
-  Folder,
-  ChevronDown,
-  MessageSquare,
+  MapPin,
+  MessageSquareText,
+  BarChart3,
   Settings,
   HelpCircle,
-  Check,
-  Plus,
   LogOutIcon,
 } from "lucide-react";
 import {
@@ -26,34 +17,33 @@ import {
   SidebarHeader,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarSeparator,
 } from "@/components/ui/sidebar";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
 import { Kbd } from "@/components/ui/kbd";
 import Image from "next/image";
-import { cn } from "@/lib/utils";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+
+const navItems = [
+  { label: "Overview", href: "/dashboard", icon: LayoutDashboard },
+  { label: "Locations", href: "/dashboard/locations", icon: MapPin },
+  { label: "Reviews", href: "/dashboard/reviews", icon: MessageSquareText },
+  { label: "Performance", href: "/dashboard/performance", icon: BarChart3 },
+];
 
 export function DashboardSidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
-  const [favoritesOpen, setFavoritesOpen] = useState(true);
+  const pathname = usePathname();
+
+  function isActive(href: string) {
+    if (href === "/dashboard") return pathname === "/dashboard";
+    return pathname.startsWith(href);
+  }
 
   return (
     <Sidebar className="lg:border-r-0!" collapsible="offcanvas" {...props}>
@@ -69,7 +59,7 @@ export function DashboardSidebar({
             <div className="flex items-center gap-2">
               <Image
                 src="/avatar.png"
-                alt="lndev.me"
+                alt="User"
                 className="size-5 object-cover rounded-full"
                 width={20}
                 height={20}
@@ -97,63 +87,28 @@ export function DashboardSidebar({
       </SidebarHeader>
 
       <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton className="h-7 text-sm text-muted-foreground">
-                  <Bell className="size-4" />
-                  <span>Notifications</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton className="h-7 text-sm text-muted-foreground">
-                  <Sparkles className="size-4" />
-                  <span>AI Assistant</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-
         <SidebarSeparator />
 
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton
-                  isActive
-                  className="h-7 text-sm text-muted-foreground"
-                >
-                  <LayoutDashboard className="size-4" />
-                  <span>Dashboard</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton className="h-7 text-sm text-muted-foreground">
-                  <Calendar className="size-4" />
-                  <span>Schedule</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton className="h-7 text-sm text-muted-foreground">
-                  <Library className="size-4" />
-                  <span>Resources</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton className="h-7 text-sm text-muted-foreground">
-                  <Users className="size-4" />
-                  <span>Clients</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton className="h-7 text-sm text-muted-foreground">
-                  <LinkIcon className="size-4" />
-                  <span>Integrations</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
+              {navItems.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <SidebarMenuItem key={item.href}>
+                    <SidebarMenuButton
+                      asChild
+                      isActive={isActive(item.href)}
+                      className="h-7 text-sm text-muted-foreground"
+                    >
+                      <Link href={item.href}>
+                        <Icon className="size-4" />
+                        <span>{item.label}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                );
+              })}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
@@ -161,12 +116,6 @@ export function DashboardSidebar({
 
       <SidebarFooter className="mb-4">
         <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton className="h-7 text-sm text-muted-foreground">
-              <MessageSquare className="size-4" />
-              <span>Feedback</span>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
           <SidebarMenuItem>
             <SidebarMenuButton className="h-7 text-sm text-muted-foreground">
               <Settings className="size-4" />
