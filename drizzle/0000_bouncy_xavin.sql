@@ -40,6 +40,15 @@ CREATE TABLE "reviews" (
 	"reply_text" text
 );
 --> statement-breakpoint
-ALTER TABLE "users" DROP CONSTRAINT "users_id_unique";--> statement-breakpoint
 ALTER TABLE "kpis" ADD CONSTRAINT "kpis_location_id_locations_location_id_fk" FOREIGN KEY ("location_id") REFERENCES "public"."locations"("location_id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "reviews" ADD CONSTRAINT "reviews_location_id_locations_location_id_fk" FOREIGN KEY ("location_id") REFERENCES "public"."locations"("location_id") ON DELETE no action ON UPDATE no action;
+ALTER TABLE "reviews" ADD CONSTRAINT "reviews_location_id_locations_location_id_fk" FOREIGN KEY ("location_id") REFERENCES "public"."locations"("location_id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+CREATE INDEX "kpis_location_id_idx" ON "kpis" USING btree ("location_id");--> statement-breakpoint
+CREATE INDEX "kpis_week_start_idx" ON "kpis" USING btree ("week_start");--> statement-breakpoint
+CREATE INDEX "kpis_location_week_idx" ON "kpis" USING btree ("location_id","week_start");--> statement-breakpoint
+CREATE INDEX "locations_store_code_idx" ON "locations" USING btree ("store_code");--> statement-breakpoint
+CREATE INDEX "locations_city_idx" ON "locations" USING btree ("city");--> statement-breakpoint
+CREATE INDEX "locations_state_idx" ON "locations" USING btree ("state");--> statement-breakpoint
+CREATE INDEX "locations_primary_category_idx" ON "locations" USING btree ("primary_category");--> statement-breakpoint
+CREATE INDEX "reviews_location_id_idx" ON "reviews" USING btree ("location_id");--> statement-breakpoint
+CREATE INDEX "reviews_review_date_idx" ON "reviews" USING btree ("review_date");--> statement-breakpoint
+CREATE INDEX "reviews_location_date_idx" ON "reviews" USING btree ("location_id","review_date");
