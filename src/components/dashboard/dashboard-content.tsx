@@ -3,7 +3,6 @@ import { AlertsPanel } from "./alerts-panel";
 import { WeeklyTrendChart } from "./weekly-trend-chart";
 import { CityPerformance } from "./city-performance";
 import { CategoryPerformance } from "./category-performance";
-import { LocationsTable } from "./locations-table";
 
 interface DashboardContentProps {
   overviewStats: {
@@ -59,18 +58,6 @@ interface DashboardContentProps {
     totalImpressions: number;
     totalActions: number;
   }[];
-  locations: {
-    locationId: string;
-    storeCode: string;
-    name: string;
-    city: string;
-    primaryCategory: string;
-    averageRating: number;
-    totalReviews: number;
-    replyRate: number;
-    avgWeeklyImpressions: number;
-    avgWeeklyActions: number;
-  }[];
 }
 
 export function DashboardContent({
@@ -79,7 +66,6 @@ export function DashboardContent({
   kpiTrends,
   cityPerformance,
   categoryPerformance,
-  locations,
 }: DashboardContentProps) {
   return (
     <div className="w-full overflow-y-auto overflow-x-hidden p-4 h-full">
@@ -98,9 +84,6 @@ export function DashboardContent({
           <CityPerformance data={cityPerformance} />
           <CategoryPerformance data={categoryPerformance} />
         </div>
-
-        {/* Row 4: Location Table */}
-        <LocationsTable locations={locations} />
       </div>
     </div>
   );

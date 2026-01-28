@@ -60,7 +60,7 @@ export default async function PerformancePage() {
             <h3 className="text-sm font-medium text-foreground mb-4">
               Conversion Funnel (Latest Week)
             </h3>
-            <div className="flex items-end gap-4 h-40">
+            <div className="flex items-end gap-4">
               {funnelData.map((item, i) => {
                 const maxVal = funnelData[0].value || 1;
                 const height = Math.max((item.value / maxVal) * 100, 5);
@@ -72,18 +72,20 @@ export default async function PerformancePage() {
                     <span className="text-sm font-medium text-foreground">
                       {item.value.toLocaleString()}
                     </span>
-                    <div
-                      className="w-full rounded-t-lg"
-                      style={{
-                        height: `${height}%`,
-                        backgroundColor:
-                          i === 0
-                            ? "#6366f1"
-                            : i === 1
-                              ? "#10b981"
-                              : "#f59e0b",
-                      }}
-                    />
+                    <div className="w-full h-32 flex items-end">
+                      <div
+                        className="w-full rounded-t-lg"
+                        style={{
+                          height: `${height}%`,
+                          backgroundColor:
+                            i === 0
+                              ? "#6366f1"
+                              : i === 1
+                                ? "#10b981"
+                                : "#f59e0b",
+                        }}
+                      />
+                    </div>
                     <span className="text-xs text-muted-foreground">
                       {item.label}
                     </span>

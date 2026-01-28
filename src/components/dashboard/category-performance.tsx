@@ -41,7 +41,7 @@ export function CategoryPerformance({ data }: CategoryPerformanceProps) {
             />
             <XAxis
               type="number"
-              tick={{ fill: isDark ? "#B4B4B4" : "#95979d", fontSize: 11 }}
+              tick={{ fill: isDark ? "#B4B4B4" : "#262626", fontSize: 11 }}
               axisLine={false}
               tickLine={false}
               domain={[0, 5]}
@@ -50,7 +50,7 @@ export function CategoryPerformance({ data }: CategoryPerformanceProps) {
             <YAxis
               type="category"
               dataKey="category"
-              tick={{ fill: isDark ? "#B4B4B4" : "#95979d", fontSize: 11 }}
+              tick={{ fill: isDark ? "#B4B4B4" : "#262626", fontSize: 11 }}
               axisLine={false}
               tickLine={false}
               width={140}
@@ -66,7 +66,7 @@ export function CategoryPerformance({ data }: CategoryPerformanceProps) {
               formatter={((value: any, name: any) => [
                 Number(value ?? 0).toFixed(1),
                 name === "avgRating" ? "Avg Rating" : name,
-              ]) as any}
+              ])}
             />
             <Bar
               dataKey="avgRating"

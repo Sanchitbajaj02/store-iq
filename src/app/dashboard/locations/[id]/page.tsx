@@ -69,7 +69,13 @@ export default async function LocationDetailPage({
                 {location.website && (
                   <span className="flex items-center gap-1">
                     <Globe className="size-3.5" />
-                    {location.website}
+                    <Link
+                      href={location.website}
+                      target="_blank"
+                      className="transition-colors hover:text-neutral-300"
+                    >
+                      {location.website}
+                    </Link>
                   </span>
                 )}
               </div>

@@ -29,7 +29,7 @@ export function CityPerformance({ data }: CityPerformanceProps) {
   const sorted = [...data].sort((a, b) => b.totalActions - a.totalActions);
 
   return (
-    <div className="rounded-xl border border-border bg-card p-6">
+    <div className="rounded-xl border border-border bg-card p-6 transition-all">
       <h3 className="text-sm font-medium text-foreground mb-4">
         Performance by City
       </h3>
@@ -43,7 +43,7 @@ export function CityPerformance({ data }: CityPerformanceProps) {
             />
             <XAxis
               type="number"
-              tick={{ fill: isDark ? "#B4B4B4" : "#95979d", fontSize: 11 }}
+              tick={{ fill: isDark ? "#B4B4B4" : "#262626", fontSize: 12 }}
               axisLine={false}
               tickLine={false}
               tickFormatter={(v) =>
@@ -53,7 +53,7 @@ export function CityPerformance({ data }: CityPerformanceProps) {
             <YAxis
               type="category"
               dataKey="city"
-              tick={{ fill: isDark ? "#B4B4B4" : "#95979d", fontSize: 11 }}
+              tick={{ fill: isDark ? "#B4B4B4" : "#262626", fontSize: 12 }}
               axisLine={false}
               tickLine={false}
               width={90}
@@ -69,7 +69,7 @@ export function CityPerformance({ data }: CityPerformanceProps) {
               formatter={((value: any, name: any) => [
                 Number(value ?? 0).toLocaleString(),
                 name === "totalActions" ? "Customer Actions" : "Impressions",
-              ]) as any}
+              ])}
             />
             <Bar
               dataKey="totalActions"
